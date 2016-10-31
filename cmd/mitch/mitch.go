@@ -12,12 +12,20 @@ import (
 
 var (
 	// Version is the bot version
-	Version = "0.0.2"
+	Version string = "Unknown build."
+	Githash string = "Unknown git commit hash."
+	Buildstamp string = "Unknown build timestamp."
+
 	// SlackToken will be set by ENV or config file in init()
 	SlackToken = ""
 )
 
+
 func init() {
+
+	fmt.Printf("Version: %s (%s) of %s \n", Version, Githash, Buildstamp)
+
+	fmt.Println("Configuring ...")
 	viper.AddConfigPath("$HOME")
 	viper.AddConfigPath(".")
 	viper.SetConfigName(".mitch")
@@ -34,6 +42,7 @@ func init() {
 }
 
 func main() {
+
 	bot, err := hanu.New(SlackToken)
 
 	if err != nil {
@@ -47,6 +56,6 @@ func main() {
 		bot.Register(cmdList[i])
 	}
 
-	fmt.Println("Starting up!")
+	fmt.Println("Listening...")
 	bot.Listen()
 }

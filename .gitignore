@@ -22,3 +22,16 @@ _testmain.go
 *.exe
 *.test
 *.prof
+
+README.html
+
+*.sublime-workspace
+*.sublime-project
+
+.idea/
+bin/
+vendor/
+mitch
+mitch.yaml
+README.orig.md
+
