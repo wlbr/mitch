@@ -33,5 +33,7 @@ bin/
 vendor/
 mitch
 mitch.yaml
+.mitch
+.mitch.yaml
 README.orig.md
 

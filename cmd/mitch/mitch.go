@@ -25,7 +25,7 @@ func init() {
 
 	fmt.Printf("Version: %s (%s) of %s \n", Version, Githash, Buildstamp)
 
-	fmt.Println("Configuring ...")
+	fmt.Println("Configuring...")
 	viper.AddConfigPath("$HOME")
 	viper.AddConfigPath(".")
 	viper.SetConfigName(".mitch")
@@ -34,11 +34,13 @@ func init() {
 
 	err := viper.ReadInConfig()
 	if err != nil {
-		fmt.Println(err)
-
+		log.Println(err)
 	}
 
 	SlackToken = viper.GetString("MITCH_SLACK_TOKEN")
+	if SlackToken == "" {
+		log.Fatal("No Slack auth token found.")
+	}
 }
 
 func main() {
@@ -49,7 +51,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	skills.Version = Version
+	skills.Version = fmt.Sprintf("%s (%s) of %s", Version, Githash, Buildstamp)
 	skills.Start = time.Now()
 	cmdList := skills.List()
 	for i := 0; i < len(cmdList); i++ {
@@ -57,5 +59,6 @@ func main() {
 	}
 
 	fmt.Println("Listening...")
+
 	bot.Listen()
 }
