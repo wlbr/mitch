@@ -27,6 +27,11 @@ func (t *TimeIn) Keyword() string {
 	return "timein"
 }
 
+func (t *TimeIn) Help() string {
+	return "`" + t.Keyword() + " <arg>` shows the current time in city `arg`. " +
+		"Try `timein singapore` or `timein würzburg`"
+}
+
 func (t *TimeIn) Handle(b *bot.Bot, msg string, ev *slack.MessageEvent) {
 	name := b.GetMessageAuthor(ev)
 	city := getCoordinates(msg)

@@ -30,6 +30,10 @@ func (v *VersionInfo) Keyword() string {
 	return "version"
 }
 
+func (v *VersionInfo) Help() string {
+	return "`" + v.Keyword() + "` version and build timestamp of the bot."
+}
+
 func (v *VersionInfo) Handle(b *bot.Bot, msg string, ev *slack.MessageEvent) {
 	user, _ := b.Client.GetUserInfo(ev.User)
 	b.Reply(ev, fmt.Sprintf("@%s: Running `%s` built on `%s`.", user.Name,

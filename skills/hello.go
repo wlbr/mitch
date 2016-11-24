@@ -18,6 +18,10 @@ func (h *Hello) Keyword() string {
 	return "hi"
 }
 
+func (h *Hello) Help() string {
+	return "`" + h.Keyword() + "` is a kind of HelloWorld."
+}
+
 func (h *Hello) Handle(b *bot.Bot, msg string, ev *slack.MessageEvent) {
 	name := b.GetMessageAuthor(ev)
 	b.Reply(ev, fmt.Sprintf("@%s: Hi yourself!", name))

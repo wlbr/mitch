@@ -30,6 +30,10 @@ func (a *Archiver) Handle(b *bot.Bot, ev *slack.MessageEvent) {
 	appendToArchive(fmt.Sprintf("%s (%s): %s\n", name, shorttime, ev.Text))
 }
 
+func (a *Archiver) Help() string {
+	return "The bot archives any message sent in any channel the bot is invited to to a file on disk."
+}
+
 func decodeTimeStamp(ts string) time.Time {
 	tt := strings.Split(ts, ".")
 	if len(tt) > 0 {

@@ -40,6 +40,10 @@ func (up *UptimeInfo) Handle(b *bot.Bot, msg string, ev *slack.MessageEvent) {
 		user.Name, round(rt, time.Second)))
 }
 
+func (up *UptimeInfo) Help() string {
+	return "`" + up.Keyword() + "` shows the time elapsed since the startup of the bot."
+}
+
 /*
 	samples := []time.Duration{9.63e6, 1.23456789e9, 1.5e9, 1.4e9, -1.4e9, -1.5e9, 8.91234e9, 34.56789e9, 12345.6789e9}
 	format := "% 13s % 13s % 13s % 13s % 13s % 13s % 13s\n"

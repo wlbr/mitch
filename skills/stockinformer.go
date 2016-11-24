@@ -27,6 +27,11 @@ func (si *StockInformer) Handle(b *bot.Bot, msg string, ev *slack.MessageEvent) 
 	b.Reply(ev, fmt.Sprintf("@%s: %s", user.Name, getQuote(cleanmsg)))
 }
 
+func (si *StockInformer) Help() string {
+	return "`" + si.Keyword() + " <arg>` shows the currents stock price for the stock id `arg`. " +
+		"Try `stock AAPL` or `stock UTDI.de`"
+}
+
 func getQuote(sym string) string {
 
 	sym = strings.ToUpper(sym)
