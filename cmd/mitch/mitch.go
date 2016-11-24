@@ -71,6 +71,7 @@ func main() {
 	mitch.Rtm = api.NewRTM()
 
 	mitch.RegisterMessageHandler(skills.NewArchiver())
+	mitch.RegisterSkillHandler(skills.NewHelp())
 	mitch.RegisterSkillHandler(skills.NewStockInformer())
 	mitch.RegisterSkillHandler(skills.NewHello())
 	mitch.RegisterSkillHandler(skills.NewEchoSkill())

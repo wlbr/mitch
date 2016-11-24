@@ -19,16 +19,19 @@ type Config struct {
 }
 
 type AnyHandler interface {
+	Help() string
 	Handle(b *Bot, i interface{})
 }
 
 type AnyMessageHandler interface {
+	Help() string
 	Handle(b *Bot, ev *slack.MessageEvent)
 }
 
 type SkillHandler interface {
-	Keyword() string
+	Help() string
 	Handle(b *Bot, msg string, ev *slack.MessageEvent)
+	Keyword() string
 }
 
 type Bot struct {
@@ -75,9 +78,12 @@ func (b *Bot) HandleSkill(ev *slack.MessageEvent) {
 	res, msg := b.IsRelevant(ev)
 	if res {
 		kword := strings.Fields(msg)
+		text := strings.TrimLeft(strings.TrimPrefix(msg, kword[0]), " ")
+		text = b.StripEscapedPseudoHtml(b.StripLinkMarkup(text))
+
 		handlers := b.skillHandlers[kword[0]]
 		for _, h := range handlers {
-			h.Handle(b, strings.Join(kword[1:], " "), ev)
+			h.Handle(b, text, ev)
 		}
 	}
 }
@@ -154,6 +160,22 @@ func (b *Bot) StripLinkMarkup(m string) string {
 	return m
 }
 
+// // StripEscapedPseudoHtml converts incoming entities for &,<,> into the characters
+// see https://api.slack.com/docs/message-formatting
+func (b *Bot) StripEscapedPseudoHtml(m string) string {
+	rep := strings.NewReplacer("&amp;", "&", "&lt;", "<", "&gt;", ">")
+	return rep.Replace(m)
+}
+
+// // EscapePseudoHtml converts &,<,> into their html entities
+// see https://api.slack.com/docs/message-formatting
+/* already done in nlopes library
+func (b *Bot) EscapePseudoHtml(m string) string {
+
+	rep := strings.NewReplacer("&", "&amp;", "<", "&lt;", ">", "&gt;")
+	return rep.Replace(m)
+} */
+
 func (b *Bot) GetMessageAuthor(ev *slack.MessageEvent) string {
 	user, err := b.Client.GetUserInfo(ev.User)
 	name := ""
@@ -182,7 +204,7 @@ func (b *Bot) DefaultMessageParameters() slack.PostMessageParameters {
 		IconURL:     slack.DEFAULT_MESSAGE_ICON_URL,
 		IconEmoji:   slack.DEFAULT_MESSAGE_ICON_EMOJI,
 		Markdown:    slack.DEFAULT_MESSAGE_MARKDOWN,
-		EscapeText:  slack.DEFAULT_MESSAGE_ESCAPE_TEXT,
+		EscapeText:  false, //slack.DEFAULT_MESSAGE_ESCAPE_TEXT,
 	}
 }
 
@@ -190,12 +212,6 @@ func (b *Bot) Reply(ev *slack.MessageEvent, msg string) {
 	b.Rtm.PostMessage(ev.Channel, msg, b.DefaultMessageParameters())
 }
 
-/*// IsHelpRequest checks if the user requests the help command
-func (m Message) IsHelpRequest() bool {
-	return strings.HasSuffix(m.Message, "help") || strings.HasPrefix(m.Message, "help")
-} */
-
-// IsDirectMessage checks if the message is received using a direct messaging channel
 func (b *Bot) IsDirectChannelMessage(ev *slack.MessageEvent) (bool, string) {
 	var result bool
 
