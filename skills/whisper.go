@@ -1,11 +1,6 @@
 package skills
 
-import (
-	"strings"
-
-	"github.com/sbstjn/hanu"
-)
-
+/*
 func init() {
 	Register(
 		"whisper <word>",
@@ -15,4 +10,4 @@ func init() {
 			conv.Reply(strings.ToLower(str))
 		},
 	)
-}
+}*/

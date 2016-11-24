@@ -1,7 +1,12 @@
-LINKERFLAGS = -X main.Version=`git describe --tags` -X main.Githash=`git describe --always --long --dirty` -X main.Buildstamp=UTC`date -u '+%Y-%m-%d_%I:%M:%S%p'`
+LINKERFLAGS = -X main.Version=`git describe --tags --always --long --dirty` -X main.Buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'`-UTC
 HOST = wlbr
 
-all: build
+all: clean build
+
+.PHONY: clean
+clean:
+	rm -f mitch
+	rm -rf bin/
 
 build:
 	go build -ldflags "$(LINKERFLAGS)" cmd/mitch/mitch.go
@@ -9,6 +14,8 @@ build:
 run:
 	go run -ldflags "$(LINKERFLAGS)" cmd/mitch/mitch.go
 
+debug:
+	dlv debug cmd/mitch/mitch.go
 
 deploy:
 	GOOS=linux GOARCH=amd64 go build -ldflags "$(LINKERFLAGS)" cmd/mitch/mitch.go
@@ -16,7 +23,9 @@ deploy:
 	ssh $(HOST) killall mitch
 	ssh $(HOST) nohup bin/mitch &
 
+rstart:
+	ssh $(HOST) nohup bin/mitch &
 
 dep:
 	go get -u github.com/spf13/viper
-	go get -u github.com/sbstjn/hanu
+	go get -u github.com/nlopes/slack
