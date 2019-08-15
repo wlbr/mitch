@@ -1,4 +1,5 @@
-LINKERFLAGS = -X main.Version=`git describe --tags --always --long --dirty` -X main.Buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'`-UTC
+LINKERFLAGS = -X main.Version=`git describe --tags --always --long --dirty` -X main.Buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S_UTC'`
+
 HOST = wlbr
 
 all: clean build
@@ -17,8 +18,11 @@ run:
 debug:
 	dlv debug cmd/mitch/mitch.go
 
-deploy:
+
+rbuild:
 	GOOS=linux GOARCH=amd64 go build -ldflags "$(LINKERFLAGS)" cmd/mitch/mitch.go
+
+deploy: rbuild
 	rsync -a --progress  mitch $(HOST):./bin/
 	ssh $(HOST) killall mitch
 	ssh $(HOST) nohup bin/mitch &

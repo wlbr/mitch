@@ -1,2 +1,2 @@
 MITCH_SLACK_TOKEN: this-has-to-ne-your-bots-slack-api-token--and-remove-.template-from-filename
-
+openweathermap_api_token: your-openweathermap.org-token

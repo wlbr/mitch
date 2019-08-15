@@ -35,7 +35,16 @@ func init() {
 	mitch.Config = &config
 	mitch.Config.Upstart = time.Now()
 
-	fmt.Printf("Version: %s of %s \n", Version, Buildstamp)
+	btime, err := time.Parse("2006-01-02_15:04:05_MST", Buildstamp)
+	if err != nil {
+		config.BuildTimeStamp = time.Now()
+	} else {
+		config.BuildTimeStamp = btime
+	}
+
+	config.GitVersion = Version
+
+	fmt.Printf("Version: %s of %s \n", config.GitVersion, config.BuildTimeStamp)
 
 	fmt.Print("Configuring...")
 	viper.AddConfigPath("$HOME")
@@ -44,7 +53,7 @@ func init() {
 	viper.AutomaticEnv()
 	viper.SetConfigType("yaml")
 
-	err := viper.ReadInConfig()
+	err = viper.ReadInConfig()
 	if err != nil {
 		log.Println(err)
 	}
@@ -53,9 +62,8 @@ func init() {
 	if config.SlackToken == "" {
 		log.Fatal("No Slack auth token found.")
 	}
+	config.OpenWeatherMapToken = viper.GetString("openweathermap_api_token")
 	config.ArchiveFile = viper.GetString("archive")
-	config.BuildTimeStamp = Buildstamp
-	config.GitVersion = Version
 
 	fmt.Println(" done.")
 }
@@ -78,6 +86,9 @@ func main() {
 	mitch.RegisterSkillHandler(skills.NewUptimeInfo())
 	mitch.RegisterSkillHandler(skills.NewVersionInfo())
 	mitch.RegisterSkillHandler(skills.NewTimeIn())
+	if config.OpenWeatherMapToken != "" {
+		mitch.RegisterSkillHandler(skills.NewWeatherIn())
+	}
 
 	go mitch.Rtm.ManageConnection()
 

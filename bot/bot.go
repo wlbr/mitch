@@ -11,11 +11,12 @@ import (
 )
 
 type Config struct {
-	SlackToken     string
-	ArchiveFile    string
-	BuildTimeStamp string
-	GitVersion     string
-	Upstart        time.Time
+	SlackToken          string
+	OpenWeatherMapToken string
+	ArchiveFile         string
+	BuildTimeStamp      time.Time
+	GitVersion          string
+	Upstart             time.Time
 }
 
 type AnyHandler interface {
@@ -198,7 +199,7 @@ func (b *Bot) DefaultMessageParameters() slack.PostMessageParameters {
 		AsUser:      true,
 		Parse:       "full",
 		LinkNames:   slack.DEFAULT_MESSAGE_LINK_NAMES,
-		Attachments: nil,
+		// Attachments: nil,  //that seems to be the API change
 		UnfurlLinks: slack.DEFAULT_MESSAGE_UNFURL_LINKS,
 		UnfurlMedia: slack.DEFAULT_MESSAGE_UNFURL_MEDIA,
 		IconURL:     slack.DEFAULT_MESSAGE_ICON_URL,
