@@ -19,7 +19,7 @@ debug:
 	dlv debug cmd/mitch/mitch.go
 
 
-rbuild: rbuild
+rbuild:
 	GOOS=linux GOARCH=amd64 go build -ldflags "$(LINKERFLAGS)" cmd/mitch/mitch.go
 
 deploy: rbuild
