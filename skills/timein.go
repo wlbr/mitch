@@ -29,7 +29,7 @@ func (t *TimeIn) Keyword() string {
 
 func (t *TimeIn) Help() string {
 	return "`" + t.Keyword() + " <arg>` shows the current time in city `arg`. " +
-		"Try `timein singapore` or `timein würzburg`"
+		"Try 'timein singapore' or 'timein würzburg'"
 }
 
 func (t *TimeIn) Handle(b *bot.Bot, msg string, ev *slack.MessageEvent) {

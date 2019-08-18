@@ -11,11 +11,12 @@ import (
 )
 
 type Config struct {
-	SlackToken     string
-	ArchiveFile    string
-	BuildTimeStamp string
-	GitVersion     string
-	Upstart        time.Time
+	SlackToken          string
+	OpenWeatherMapToken string
+	ArchiveFile         string
+	BuildTimeStamp      time.Time
+	GitVersion          string
+	Upstart             time.Time
 }
 
 type AnyHandler interface {
@@ -192,24 +193,12 @@ func (b *Bot) GetMessageAuthor(ev *slack.MessageEvent) string {
 	return name
 }
 
-func (b *Bot) DefaultMessageParameters() slack.PostMessageParameters {
-	return slack.PostMessageParameters{
-		Username:    b.MyName,
-		AsUser:      true,
-		Parse:       "full",
-		LinkNames:   slack.DEFAULT_MESSAGE_LINK_NAMES,
-		Attachments: nil,
-		UnfurlLinks: slack.DEFAULT_MESSAGE_UNFURL_LINKS,
-		UnfurlMedia: slack.DEFAULT_MESSAGE_UNFURL_MEDIA,
-		IconURL:     slack.DEFAULT_MESSAGE_ICON_URL,
-		IconEmoji:   slack.DEFAULT_MESSAGE_ICON_EMOJI,
-		Markdown:    slack.DEFAULT_MESSAGE_MARKDOWN,
-		EscapeText:  false, //slack.DEFAULT_MESSAGE_ESCAPE_TEXT,
-	}
-}
+
+
+
 
 func (b *Bot) Reply(ev *slack.MessageEvent, msg string) {
-	b.Rtm.PostMessage(ev.Channel, msg, b.DefaultMessageParameters())
+	b.Rtm.PostMessage(ev.Channel, slack.MsgOptionAsUser(true), slack.MsgOptionParse(true), slack.MsgOptionText(msg, false))
 }
 
 func (b *Bot) IsDirectChannelMessage(ev *slack.MessageEvent) (bool, string) {

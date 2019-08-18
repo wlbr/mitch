@@ -34,12 +34,14 @@ func (h *Help) Handle(b *bot.Bot, msg string, ev *slack.MessageEvent) {
 	for _, handler := range b.AnyHandlers {
 		res = res + "\n" + handler.Help()
 	}
-
 	for _, handler := range b.MessageHandlers {
 		res = res + "\n" + handler.Help()
 	}
 
 	if len(b.Skills) > 0 {
+		if len(b.AnyHandlers)+len(b.Skills) > 0 {
+			res += "\n"
+		}
 		res = res + "\nCommands:\n"
 	}
 	for _, handler := range b.Skills {

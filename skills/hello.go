@@ -25,4 +25,5 @@ func (h *Hello) Help() string {
 func (h *Hello) Handle(b *bot.Bot, msg string, ev *slack.MessageEvent) {
 	name := b.GetMessageAuthor(ev)
 	b.Reply(ev, fmt.Sprintf("@%s: Hi yourself!", name))
+
 }
